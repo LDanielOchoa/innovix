@@ -1,0 +1,25 @@
+{
+    "sidebar": {
+        "principal": "PRINCIPAL",
+        "operaciones": "OPERACIONES",
+        "gestion": "GESTIÓN",
+        "dashboard": "Dashboard",
+        "tracking": "Seguimiento",
+        "mapa": "Mapa",
+        "administracion": "Administración",
+        "configuracion": "Ajustes",
+        "activeSystem": "Sistema Activo"
+    },
+    "theme": {
+        "switchToDark": "Cambiar a modo oscuro",
+        "switchToLight": "Cambiar a modo claro"
+    },
+    "language": {
+        "title": "Idioma",
+        "es": "Español",
+        "en": "Inglés"
+    },
+    "common": {
+        "welcome": "Bienvenido"
+    }
+}

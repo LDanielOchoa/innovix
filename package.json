@@ -1,0 +1,22 @@
+{
+  "name": "nuxt-app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@kalimahapps/vue-icons": "^1.9.5",
+    "@pinia/nuxt": "^0.11.3",
+    "@tabler/icons-vue": "^3.36.1",
+    "nuxt": "^4.3.1",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.28",
+    "vue-i18n": "11",
+    "vue-router": "^4.6.4"
+  }
+}
