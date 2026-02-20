@@ -21,5 +21,26 @@
     },
     "common": {
         "welcome": "Bienvenido"
+    },
+    "auth": {
+        "welcome": "Bienvenido",
+        "subtitle": "Ingresa a tu cuenta para gestionar tus operaciones.",
+        "userLabel": "Usuario",
+        "userPlaceholder": "Tu nombre de usuario",
+        "passLabel": "Contraseña",
+        "passPlaceholder": "Tu contraseña",
+        "forgotPass": "¿Olvidaste tu contraseña?",
+        "rememberMe": "Mantenerme conectado",
+        "submit": "Iniciar sesión",
+        "errorEmpty": "Por favor completa tus datos",
+        "errorInvalid": "Credenciales inválidas. Intenta nuevamente.",
+        "monitoringSystem": "Sistema de Monitoreo",
+        "bannerTitle": "Gestión Inteligente en Tiempo Real",
+        "bannerDesc": "Optimiza tus rutas, controla tu flota y mejora la eficiencia de tu operación con nuestra tecnología de punta.",
+        "or": "O también",
+        "google": "Entrar con Google",
+        "facebook": "Entrar con Facebook",
+        "noAccount": "¿No tienes una cuenta?",
+        "signUp": "Regístrate"
     }
 }

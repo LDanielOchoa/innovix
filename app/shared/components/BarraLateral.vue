@@ -45,7 +45,7 @@
     <!-- Footer -->
     <footer class="sidebar__footer">
 
-      <!-- Toggle de tema tipo pill -->
+      <!-- Toggle de tema -->
       <ThemeTogglePill :is-collapsed="navStore.estaColapsado" />
 
       <!-- Selector de idioma -->
@@ -60,7 +60,6 @@
 import { useNavigationStore } from '~/core/navigation/application/useNavigation';
 import logoUrl from '~/assets/logo.png';
 
-// Importando los componentes UI reutilizables
 import SidebarCollapseBtn from './ui/SidebarCollapseBtn.vue';
 import SidebarNavItem from './ui/SidebarNavItem.vue';
 import ThemeTogglePill from './ui/ThemeTogglePill.vue';
@@ -80,7 +79,7 @@ const navStore = useNavigationStore();
   background-color: var(--iv-sidebar-bg);
   display: flex;
   flex-direction: column;
-  padding: 2rem 1rem 1.5rem;
+  padding: 1.75rem 0.85rem 1.25rem;
   box-sizing: border-box;
   z-index: 1000;
   font-family: 'Manrope', sans-serif;
@@ -93,12 +92,12 @@ const navStore = useNavigationStore();
 
 .sidebar--colapsado {
   width: 72px;
-  padding: 2rem 0.65rem 1.5rem;
+  padding: 1.75rem 0.65rem 1.25rem;
 }
 
 /* ── Marca / Logo ── */
 .sidebar__marca {
-  padding: 0 0 2rem;
+  padding: 0 0.15rem 1.75rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,10 +105,10 @@ const navStore = useNavigationStore();
 }
 
 .marca__logo {
-  height: 40px;
+  height: 38px;
   width: auto;
   min-width: 0;
-  max-width: 150px;
+  max-width: 140px;
   object-fit: contain;
   transition:
     filter 0.3s ease,
@@ -138,14 +137,14 @@ const navStore = useNavigationStore();
 .sidebar__nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0;
 }
 
 /* ── Grupo ── */
 .nav__grupo {
   display: flex;
   flex-direction: column;
-  padding-top: 1.25rem;
+  padding-top: 1.5rem;
 }
 
 .nav__grupo:first-child {
@@ -172,21 +171,18 @@ const navStore = useNavigationStore();
 }
 
 .nav__titulo-grupo {
-  font-size: 0.58rem;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--iv-text-muted);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   padding-left: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
   white-space: nowrap;
   overflow: hidden;
   opacity: 1;
   max-height: 2rem;
-  transition:
-    opacity 0.15s ease,
-    max-height 0.3s ease,
-    margin-bottom 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar--colapsado .nav__titulo-grupo {
@@ -199,16 +195,19 @@ const navStore = useNavigationStore();
 .nav__items {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 /* ── Footer ── */
 .sidebar__footer {
-  padding-top: 1.25rem;
+  padding-top: 1rem;
+  margin-top: 0.25rem;
   border-top: 1px solid var(--iv-border);
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
   overflow: hidden;
 }
 </style>
+
+

@@ -21,5 +21,26 @@
     },
     "common": {
         "welcome": "Welcome"
+    },
+    "auth": {
+        "welcome": "Welcome",
+        "subtitle": "Sign in to your account to manage your operations.",
+        "userLabel": "Username",
+        "userPlaceholder": "Your username",
+        "passLabel": "Password",
+        "passPlaceholder": "Your password",
+        "forgotPass": "Forgot your password?",
+        "rememberMe": "Keep me logged in",
+        "submit": "Sign In",
+        "errorEmpty": "Please fill in your details",
+        "errorInvalid": "Invalid credentials. Try again.",
+        "monitoringSystem": "Monitoring System",
+        "bannerTitle": "Intelligent Real-Time Management",
+        "bannerDesc": "Optimize your routes, control your fleet, and improve operational efficiency with our cutting-edge technology.",
+        "or": "OR",
+        "google": "Sign up with Google",
+        "facebook": "Sign up with Facebook",
+        "noAccount": "Don't have an account?",
+        "signUp": "Sign up"
     }
 }

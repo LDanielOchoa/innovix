@@ -5,9 +5,6 @@
     @click="$emit('click')"
     :title="isCollapsed ? label : ''"
   >
-    <!-- Indicador activo lateral -->
-    <span class="nav__indicador-activo"></span>
-
     <div class="nav__item-icono">
       <component :is="iconComponent" :size="19" />
     </div>
@@ -60,68 +57,50 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   all: unset;
   display: flex;
   align-items: center;
-  padding: 0.7rem 0.75rem;
-  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
   color: var(--iv-text-secondary);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 550;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav__item:hover {
-  background-color: var(--iv-item-hover);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* ── Estado activo ── */
+.nav__item--activo {
+  background-color: rgba(0, 159, 227, 0.08);
   color: var(--iv-primary);
 }
 
-.nav__item--activo {
+.nav__item--activo:hover {
   background-color: rgba(0, 159, 227, 0.1);
   color: var(--iv-primary);
 }
 
-/* Indicador de barra lateral izquierda */
-.nav__indicador-activo {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%) scaleY(0);
-  width: 3px;
-  height: 60%;
-  border-radius: 0 3px 3px 0;
-  background-color: var(--iv-primary);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.nav__item--activo .nav__indicador-activo {
-  transform: translateY(-50%) scaleY(1);
-}
-
-/* Icono */
+/* ── Ícono ── */
 .nav__item-icono {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
+  width: 24px;
+  height: 24px;
   color: inherit;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  border-radius: 12px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Comportamiento colapsado ── */
+/* ── Colapsado ── */
 .nav__item--colapsado {
   justify-content: center;
-  padding: 0.35rem 0;
-  border-radius: 0;
+  padding: 0;
   background-color: transparent !important;
 }
 
@@ -134,31 +113,27 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
 }
 
 .nav__item--colapsado .nav__item-icono {
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
-  background-color: transparent;
+  width: 42px;
+  height: 42px;
 }
 
 .nav__item--colapsado:hover .nav__item-icono {
-  background-color: var(--iv-item-hover);
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 .nav__item--colapsado.nav__item--activo .nav__item-icono {
-  background-color: rgba(0, 159, 227, 0.12);
+  background-color: rgba(0, 159, 227, 0.1);
+  color: var(--iv-primary);
 }
 
-/* Etiqueta */
+/* ── Etiqueta ── */
 .nav__item-etiqueta {
-  margin-left: 10px;
+  margin-left: 12px;
   flex: 1;
   overflow: hidden;
   opacity: 1;
   max-width: 200px;
-  transition:
-    opacity 0.15s ease,
-    max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-    margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav__item--colapsado .nav__item-etiqueta {
@@ -167,17 +142,17 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   margin-left: 0;
 }
 
-/* Badge */
+/* ── Badge ── */
 .nav__item-badge {
   font-size: 0.6rem;
   font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 6px;
+  padding: 2px 8px;
+  border-radius: 99px;
   background-color: var(--iv-surface);
   color: var(--iv-text-muted);
   flex-shrink: 0;
   opacity: 1;
-  transition: opacity 0.15s ease;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav__item-badge.live {
@@ -185,9 +160,14 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   color: var(--iv-primary);
 }
 
+.nav__item--activo .nav__item-badge {
+  background-color: rgba(0, 159, 227, 0.12);
+  color: var(--iv-primary);
+}
+
 .nav__item--colapsado .nav__item-badge {
   opacity: 0;
-  width: 0;
+  max-width: 0;
   padding: 0;
   overflow: hidden;
 }

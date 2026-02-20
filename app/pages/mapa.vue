@@ -1,5 +1,8 @@
 <template>
-  <div class="page-mapa-container">
+  <div
+    class="page-mapa-container"
+    :class="{ 'mapa--sidebar-colapsado': navStore.estaColapsado }"
+  >
     <VistaMapa />
   </div>
 </template>
@@ -11,29 +14,41 @@ import { onMounted, onUnmounted } from 'vue';
 
 const navStore = useNavigationStore();
 
-
 onMounted(() => {
   navStore.setActive('mapa');
-  // Agregar clase global al body/main para quitar padding
   document.querySelector('.pagina-contenido')?.classList.add('layout-reset-padding');
 });
 
 onUnmounted(() => {
-  // Limpiar al salir
   document.querySelector('.pagina-contenido')?.classList.remove('layout-reset-padding');
 });
 </script>
 
 <style>
-/* Resetear padding global de Layout solo para la vista de Mapa */
+/* Resetear padding del layout para la vista de Mapa */
 .layout-reset-padding {
   padding: 0 !important;
-  height: 100vh;
   overflow: hidden;
 }
 
+/* Contenedor fijo que se ajusta al sidebar */
 .page-mapa-container {
-  height: 100vh;
-  width: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 280px;
+  z-index: 1;
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mapa--sidebar-colapsado {
+  left: 72px;
+}
+
+@media (max-width: 1024px) {
+  .page-mapa-container {
+    left: 0;
+  }
 }
 </style>
