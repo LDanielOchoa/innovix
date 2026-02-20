@@ -4,9 +4,6 @@
     <aside class="panel-lista">
       <!-- Cabecera -->
       <header class="panel-header">
-        <button class="btn-atras">
-          <IconArrowLeft :size="20" />
-        </button>
         <div class="header-logo">
           <IconCar :size="20" />
         </div>
@@ -65,7 +62,6 @@
           <!-- Info Principal -->
           <div class="item-info">
             <h3 class="item-nombre">{{ disp.nombre }}</h3>
-            <p class="item-detalles">{{ disp.detalles }}</p>
           </div>
 
           <!-- Estado / Status -->
@@ -77,56 +73,9 @@
       </div>
     </aside>
 
-    <!-- Mapa Area (Fondo simulación) -->
     <main class="panel-mapa">
       <div class="mapa-simulado">
         <div class="map-grid"></div>
-
-        <!-- Rutas (simulando vista SVG) -->
-        <svg class="map-routes" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M 25 32 C 45 32, 50 35, 50 50 C 50 65, 45 80, 55 58" class="route-line" />
-        </svg>
-
-        <!-- Pines de Mapa -->
-        <div
-          v-for="disp in dispositivos"
-          :key="'pin-' + disp.id"
-          class="map-pin-wrap"
-          :style="{ top: disp.pos.y + '%', left: disp.pos.x + '%' }"
-          @click="seleccionar(disp.id)"
-        >
-          <div class="map-pin" :class="{ 'pin-activo': seleccionado === disp.id, [`pin-${disp.estadoClase}`]: true }">
-            <component :is="disp.icono" :size="20" />
-          </div>
-          <div class="map-pin-label">
-            <component :is="disp.estadoIcono" :size="14" />
-            <span>{{ disp.velocidad }}</span>
-          </div>
-          
-          <!-- Popup Activo -->
-          <div v-if="seleccionado === disp.id" class="map-popup animate-in">
-            <div class="popup-header">
-              <div class="popup-avatar" :class="`avatar-${disp.estadoClase}`">
-                 <component :is="disp.icono" :size="20" />
-              </div>
-              <div class="popup-title">
-                <h3>{{ disp.nombre }}</h3>
-                <p>{{ disp.detalles }}</p>
-              </div>
-            </div>
-            <div class="popup-stats">
-              <div class="stat"><IconCalendar :size="14" /> {{ disp.fecha }}</div>
-              <div class="stat"><IconMapPin :size="14" /> {{ disp.estadoTexto }}</div>
-            </div>
-            <div class="popup-desc">
-              <!-- Descripción random para llenar espacio emulando la app original -->
-              Dispositivo GPS reportando coordenadas de manera estable en la región monitoreada.
-              Registrado para control de flota y seguimiento logístico.
-            </div>
-            <button class="popup-btn">Más detalles</button>
-          </div>
-        </div>
-
       </div>
     </main>
   </div>
@@ -135,20 +84,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import {
-  IconArrowLeft,
   IconSearch,
   IconChevronDown,
   IconFilter,
   IconCar,
   IconTruck,
-  IconMotorbike,
-  IconCpu,
   IconCube,
   IconWifi,
   IconZzz,
   IconWifiOff,
-  IconMapPin,
-  IconCalendar,
   IconInfoCircle
 } from '@tabler/icons-vue';
 
@@ -164,7 +108,7 @@ const dispositivos = ref([
     fecha: '14 sept 6:00pm',
     estadoClase: 'online',
     estadoIcono: IconWifi,
-    icono: IconCar,
+    icono: IconTruck,
     pos: { x: 25, y: 32 }
   },
   {
@@ -188,7 +132,7 @@ const dispositivos = ref([
     fecha: '12 sept 11:00am',
     estadoClase: 'offline',
     estadoIcono: IconWifiOff,
-    icono: IconCpu,
+    icono: IconTruck,
     pos: { x: 40, y: 65 }
   },
   {
@@ -200,7 +144,7 @@ const dispositivos = ref([
     fecha: '14 sept 6:15pm',
     estadoClase: 'online',
     estadoIcono: IconWifi,
-    icono: IconMotorbike,
+    icono: IconTruck,
     pos: { x: 75, y: 55 }
   }
 ]);
