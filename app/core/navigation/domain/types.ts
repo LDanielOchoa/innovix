@@ -1,7 +1,7 @@
 export interface NavItem {
     id: string;
     label: string;
-    icon: string; // Nombre del icono de Lucide
+    icon: string;
     section: 'principal' | 'operaciones' | 'gestion';
     badge?: string;
     badgeType?: 'live' | 'default';

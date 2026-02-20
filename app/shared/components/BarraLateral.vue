@@ -1,114 +1,77 @@
 <template>
-  <aside class="sidebar-vuesax">
-    <!-- Branding -->
-    <header class="brand-section">
-      <div class="logo-wrapper">
-        <img :src="logoUrl" :alt="$t('sidebar.dashboard')" class="brand-logo" />
-      </div>
+  <aside class="sidebar" :class="{ 'sidebar--colapsado': navStore.estaColapsado }">
+
+    <!-- Botón de colapso flotante -->
+    <SidebarCollapseBtn
+      :is-collapsed="navStore.estaColapsado"
+      @toggle="navStore.alternarColapso"
+    />
+
+    <!-- Logo / Marca -->
+    <header class="sidebar__marca">
+      <img :src="logoUrl" alt="Innovix" class="marca__logo" />
     </header>
 
-    <!-- Navigation Scroll -->
-    <div class="scroller-area">
-      <nav class="nav-container">
-        <div v-for="section in navStore.sections" :key="section.id" class="nav-group">
-          <span class="group-title">{{ $t(`sidebar.${section.id}`) }}</span>
-          
-          <div class="items-stack">
-            <button 
-              v-for="item in section.items" 
+    <!-- Navegación -->
+    <div class="sidebar__scroll">
+      <nav class="sidebar__nav">
+        <div
+          v-for="seccion in navStore.sections"
+          :key="seccion.id"
+          class="nav__grupo"
+        >
+          <!-- Divisor de grupo en modo colapsado -->
+          <div class="nav__divisor-grupo"></div>
+          <span class="nav__titulo-grupo">{{ $t(`sidebar.${seccion.id}`) }}</span>
+
+          <div class="nav__items">
+            <SidebarNavItem
+              v-for="item in seccion.items"
               :key="item.id"
-              class="nav-item-btn"
-              :class="{ 'is-active': navStore.activeItemId === item.id }"
+              :item="item"
+              :is-active="navStore.activeItemId === item.id"
+              :is-collapsed="navStore.estaColapsado"
+              :label="$t(`sidebar.${item.id}`)"
+              :icon-name="item.icon"
+              :badge="item.badge"
+              :badge-type="item.badgeType"
               @click="navStore.setActive(item.id)"
-            >
-              <div class="icon-holder">
-                <component :is="getIcon(item.icon)" :size="20" />
-              </div>
-              <span class="item-label">{{ $t(`sidebar.${item.id}`) }}</span>
-              
-              <div v-if="item.badge" class="item-badge" :class="item.badgeType">
-                {{ item.badge }}
-              </div>
-            </button>
+            />
           </div>
         </div>
       </nav>
     </div>
 
-    <!-- Status Indicator & Theme Toggle -->
-    <footer class="sidebar-status">
-      <div class="footer-actions">
-        <div class="status-pill">
-          <div class="status-indicator"></div>
-          <span class="status-text">{{ $t('sidebar.activeSystem') }}</span>
-        </div>
-        
-        <div class="locale-switcher">
-          <button 
-            @click="localeStore.setLocale('es')" 
-            :class="{ active: localeStore.currentLocale === 'es' }"
-            title="Español"
-          >
-            ES
-          </button>
-          <button 
-            @click="localeStore.setLocale('en')" 
-            :class="{ active: localeStore.currentLocale === 'en' }"
-            title="English"
-          >
-            EN
-          </button>
-        </div>
-      </div>
+    <!-- Footer -->
+    <footer class="sidebar__footer">
 
-      <button 
-        class="theme-toggle" 
-        @click="themeStore.toggleTheme"
-        :title="themeStore.isDarkMode ? $t('theme.switchToLight') : $t('theme.switchToDark')"
-      >
-        <component :is="themeStore.isDarkMode ? IconSun : IconMoon" :size="18" />
-      </button>
+      <!-- Toggle de tema tipo pill -->
+      <ThemeTogglePill :is-collapsed="navStore.estaColapsado" />
+
+      <!-- Selector de idioma -->
+      <SidebarLocaleSwitcher :is-collapsed="navStore.estaColapsado" />
+
     </footer>
+
   </aside>
 </template>
 
 <script setup lang="ts">
 import { useNavigationStore } from '~/core/navigation/application/useNavigation';
-import { useThemeStore } from '~/core/theme/application/useTheme';
-import { useLocaleStore } from '~/core/i18n/application/useLocale';
-import { 
-  IconLayoutDashboard,
-  IconActivity,
-  IconMap2,
-  IconShieldCheck,
-  IconSettings,
-  IconSun,
-  IconMoon
-} from '@tabler/icons-vue';
 import logoUrl from '~/assets/logo.png';
 
+// Importando los componentes UI reutilizables
+import SidebarCollapseBtn from './ui/SidebarCollapseBtn.vue';
+import SidebarNavItem from './ui/SidebarNavItem.vue';
+import ThemeTogglePill from './ui/ThemeTogglePill.vue';
+import SidebarLocaleSwitcher from './ui/SidebarLocaleSwitcher.vue';
+
 const navStore = useNavigationStore();
-const themeStore = useThemeStore();
-const localeStore = useLocaleStore();
-
-const iconMap: Record<string, any> = {
-  IconLayoutDashboard,
-  IconActivity,
-  IconMap2,
-  IconShieldCheck,
-  IconSettings
-};
-
-const getIcon = (iconName: string) => iconMap[iconName] || IconLayoutDashboard;
 </script>
 
 <style scoped>
-/* 
-  Bespoke UI Design System for INNOVIX
-  Philosophy: Minimalism, Depth, and Precision.
-*/
-
-.sidebar-vuesax {
+/* ── Contenedor principal ── */
+.sidebar {
   position: fixed;
   left: 0;
   top: 0;
@@ -117,213 +80,135 @@ const getIcon = (iconName: string) => iconMap[iconName] || IconLayoutDashboard;
   background-color: var(--iv-sidebar-bg);
   display: flex;
   flex-direction: column;
-  padding: 2.5rem 1.25rem;
+  padding: 2rem 1rem 1.5rem;
   box-sizing: border-box;
   z-index: 1000;
   font-family: 'Manrope', sans-serif;
   border-right: 1px solid var(--iv-border);
-  transition: var(--iv-transition);
+  transition:
+    width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+    padding 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: visible;
 }
 
-/* Brand */
-.brand-section {
-  padding-bottom: 3.5rem;
+.sidebar--colapsado {
+  width: 72px;
+  padding: 2rem 0.65rem 1.5rem;
+}
+
+/* ── Marca / Logo ── */
+.sidebar__marca {
+  padding: 0 0 2rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
-.brand-logo {
-  height: 54px;
+.marca__logo {
+  height: 40px;
   width: auto;
-  transition: var(--iv-transition);
-  /* Filtro dinámico basado en el tema */
+  min-width: 0;
+  max-width: 150px;
+  object-fit: contain;
+  transition:
+    filter 0.3s ease,
+    max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   filter: brightness(0) saturate(100%) invert(31%) sepia(97%) saturate(1751%) hue-rotate(180deg) brightness(96%) contrast(101%);
 }
 
-.dark-mode .brand-logo {
+.dark-mode .marca__logo {
   filter: brightness(0) invert(1);
 }
 
-/* Nav */
-.scroller-area {
+.sidebar--colapsado .marca__logo {
+  max-width: 32px;
+}
+
+/* ── Scroll ── */
+.sidebar__scroll {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-width: none;
 }
+.sidebar__scroll::-webkit-scrollbar { display: none; }
 
-.scroller-area::-webkit-scrollbar { display: none; }
-
-.nav-container {
+/* ── Nav ── */
+.sidebar__nav {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 0.25rem;
 }
 
-.nav-group {
+/* ── Grupo ── */
+.nav__grupo {
   display: flex;
   flex-direction: column;
+  padding-top: 1.25rem;
 }
 
-.group-title {
-  font-size: 0.65rem;
+.nav__grupo:first-child {
+  padding-top: 0;
+}
+
+/* Divisor de grupo visible solo en modo colapsado */
+.nav__divisor-grupo {
+  display: none;
+  height: 1px;
+  background-color: var(--iv-border);
+  margin: 0 0.5rem 0.75rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar--colapsado .nav__divisor-grupo {
+  display: block;
+  opacity: 1;
+}
+
+.nav__grupo:first-child .nav__divisor-grupo {
+  display: none !important;
+}
+
+.nav__titulo-grupo {
+  font-size: 0.58rem;
   font-weight: 700;
   text-transform: uppercase;
   color: var(--iv-text-muted);
   letter-spacing: 0.12em;
-  padding-left: 1rem;
-  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 1;
+  max-height: 2rem;
+  transition:
+    opacity 0.15s ease,
+    max-height 0.3s ease,
+    margin-bottom 0.3s ease;
 }
 
-.items-stack {
+.sidebar--colapsado .nav__titulo-grupo {
+  opacity: 0;
+  max-height: 0;
+  margin-bottom: 0;
+  pointer-events: none;
+}
+
+.nav__items {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 2px;
 }
 
-.nav-item-btn {
-  all: unset;
-  display: flex;
-  align-items: center;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  color: var(--iv-text-secondary);
-  font-size: 0.925rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--iv-transition);
-}
-
-.nav-item-btn:hover {
-  background-color: var(--iv-item-hover);
-  color: var(--iv-primary);
-}
-
-.icon-holder {
-  margin-right: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #cbd5e0;
-  transition: color 0.2s;
-}
-
-.nav-item-btn:hover .icon-holder {
-  color: var(--iv-primary);
-}
-
-.item-label {
-  flex: 1;
-}
-
-/* Active State - Soft Cyan */
-.nav-item-btn.is-active {
-  background-color: rgba(0, 159, 227, 0.08);
-  color: var(--iv-primary);
-}
-
-.nav-item-btn.is-active .icon-holder {
-  color: var(--iv-primary);
-}
-
-/* Badges */
-.item-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 8px;
-  background-color: #f7fafc;
-  color: #718096;
-}
-
-.item-badge.live {
-  background-color: rgba(0, 159, 227, 0.12);
-  color: var(--iv-primary);
-}
-
-.sidebar-status {
-  padding-top: 1.5rem;
+/* ── Footer ── */
+.sidebar__footer {
+  padding-top: 1.25rem;
   border-top: 1px solid var(--iv-border);
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.footer-actions {
-  display: flex;
   flex-direction: column;
-  gap: 1rem;
-  flex: 1;
-}
-
-.status-pill {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.status-indicator {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: var(--iv-indicator-active);
-}
-
-.status-text {
-  font-size: 0.7rem;
-  color: var(--iv-text-muted);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.locale-switcher {
-  display: flex;
-  gap: 2px;
-  background-color: var(--iv-surface);
-  padding: 4px;
-  border-radius: 10px;
-  width: fit-content;
-  border: 1px solid var(--iv-border);
-}
-
-.locale-switcher button {
-  all: unset;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 5px 10px;
-  border-radius: 7px;
-  cursor: pointer;
-  color: var(--iv-text-secondary);
-}
-
-.locale-switcher button:hover:not(.active) {
-  background-color: var(--iv-item-hover);
-  color: var(--iv-primary);
-}
-
-.locale-switcher button.active {
-  background-color: var(--iv-primary);
-  color: white;
-}
-
-/* Theme Toggle Button */
-.theme-toggle {
-  all: unset;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background-color: var(--iv-surface);
-  color: var(--iv-text-main);
-  cursor: pointer;
-  border: 1px solid var(--iv-border);
-}
-
-.theme-toggle:hover {
-  background-color: var(--iv-primary);
-  color: white;
+  gap: 0.75rem;
+  overflow: hidden;
 }
 </style>

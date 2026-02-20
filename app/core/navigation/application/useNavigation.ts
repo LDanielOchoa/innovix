@@ -4,6 +4,7 @@ import type { NavItem } from '../domain/types';
 export const useNavigationStore = defineStore('navigation', {
     state: () => ({
         activeItemId: 'dashboard',
+        estaColapsado: false,
         items: [
             { id: 'dashboard', label: 'Dashboard', icon: 'IconLayoutDashboard', section: 'principal', order: 1 },
             { id: 'tracking', label: 'Tracking', icon: 'IconActivity', section: 'operaciones', badge: 'En vivo', badgeType: 'live', order: 2 },
@@ -34,6 +35,10 @@ export const useNavigationStore = defineStore('navigation', {
     actions: {
         setActive(id: string) {
             this.activeItemId = id;
+        },
+
+        alternarColapso() {
+            this.estaColapsado = !this.estaColapsado;
         },
 
         registerItem(item: NavItem) {

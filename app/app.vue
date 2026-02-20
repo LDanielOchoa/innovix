@@ -1,9 +1,7 @@
 <template>
   <NuxtLayout>
     <NuxtRouteAnnouncer />
-    <div class="test-content">
-      <h1>{{ $t('common.welcome') }}</h1>
-    </div>
+    <NuxtPage />
   </NuxtLayout>
 </template>
 
@@ -11,6 +9,26 @@
 import { useThemeStore } from '~/core/theme/application/useTheme';
 import { useLocaleStore } from '~/core/i18n/application/useLocale';
 import { onMounted } from 'vue';
+
+useHead({
+  script: [
+    {
+      innerHTML: `
+        (function() {
+          var tema = localStorage.getItem('theme-mode');
+          var esModoOscuro = tema ? tema === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (esModoOscuro) document.documentElement.classList.add('dark-mode');
+          document.documentElement.classList.add('sin-transicion');
+          window.addEventListener('load', function() {
+            document.documentElement.classList.remove('sin-transicion');
+          });
+        })();
+      `,
+      tagPosition: 'head',
+      tagPriority: 'critical',
+    }
+  ]
+});
 
 const themeStore = useThemeStore();
 const localeStore = useLocaleStore();
@@ -51,6 +69,13 @@ onMounted(() => {
   --iv-border: #334155;
   --iv-indicator-active: #10b981;
 }
+
+.sin-transicion *,
+.sin-transicion *::before,
+.sin-transicion *::after {
+  transition: none !important;
+}
+
 
 body {
   margin: 0;
