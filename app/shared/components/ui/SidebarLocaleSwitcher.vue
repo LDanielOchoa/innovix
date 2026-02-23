@@ -4,8 +4,8 @@
       v-for="idioma in idiomas"
       :key="idioma.codigo"
       class="locale-btn"
-      :class="{ activo: localeStore.currentLocale === idioma.codigo }"
-      @click="localeStore.setLocale(idioma.codigo)"
+      :class="{ activo: locale === idioma.codigo }"
+      @click="setLocale(idioma.codigo)"
       :title="idioma.nombre"
     >
       <span class="locale-bandera">{{ idioma.bandera }}</span>
@@ -15,13 +15,11 @@
 </template>
 
 <script setup lang="ts">
-import { useLocaleStore } from '~/core/i18n/application/useLocale';
+const { locale, setLocale } = useI18n();
 
 defineProps<{
   isCollapsed: boolean;
 }>();
-
-const localeStore = useLocaleStore();
 
 const idiomas = [
   { codigo: 'es', nombre: 'Español', bandera: '🇪🇸' },

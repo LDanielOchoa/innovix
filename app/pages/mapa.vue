@@ -25,13 +25,13 @@ onUnmounted(() => {
 </script>
 
 <style>
-/* Resetear padding del layout para la vista de Mapa */
+
 .layout-reset-padding {
   padding: 0 !important;
   overflow: hidden;
 }
 
-/* Contenedor fijo que se ajusta al sidebar */
+
 .page-mapa-container {
   position: fixed;
   top: 0;

@@ -73,7 +73,7 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* ── Estado activo ── */
+
 .nav__item--activo {
   background-color: rgba(0, 159, 227, 0.08);
   color: var(--iv-primary);
@@ -84,7 +84,6 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   color: var(--iv-primary);
 }
 
-/* ── Ícono ── */
 .nav__item-icono {
   display: flex;
   align-items: center;
@@ -97,7 +96,6 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Colapsado ── */
 .nav__item--colapsado {
   justify-content: center;
   padding: 0;
@@ -126,7 +124,6 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   color: var(--iv-primary);
 }
 
-/* ── Etiqueta ── */
 .nav__item-etiqueta {
   margin-left: 12px;
   flex: 1;
@@ -142,7 +139,6 @@ const iconComponent = computed(() => mapaIconos[props.iconName] || IconLayoutDas
   margin-left: 0;
 }
 
-/* ── Badge ── */
 .nav__item-badge {
   font-size: 0.6rem;
   font-weight: 700;

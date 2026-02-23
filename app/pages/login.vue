@@ -1,118 +1,64 @@
 <template>
-  <div class="login">
+  <div class="login" :class="{ 'login--otp': paso === 'otp' }">
     <div class="login__contenedor">
-      <!-- PANEL IZQUIERDO: FORMULARIO (Estilo Abierto y Refinado) -->
-      <div class="login__panel-formulario">
+      <div 
+        class="login__panel-formulario"
+        :class="{ 'login__panel-formulario--centrado': paso === 'otp' }"
+      >
         <div class="login__inner">
-          <header class="login__header">
-            <div class="login__logo-wrapper">
-              <img :src="logoUrl" alt="Innovix" class="login__logo" />
-            </div>
-            <h1 class="login__titulo">{{ t('auth.welcome') }}</h1>
-            <p class="login__subtitulo">{{ t('auth.subtitle') }}</p>
-          </header>
+          <AuthHeader :paso="paso" />
 
-          <form class="login__form" @submit.prevent="iniciarSesion">
-            <!-- Usuario -->
-            <div class="login__campo">
-              <label class="login__label" for="usuario">{{ t('auth.userLabel') }}</label>
-              <div class="login__input-wrapper" :class="{ 'login__input-wrapper--focus': campoEnfocado === 'usuario' }">
-                <IconUser class="login__input-icon" :size="20" />
-                <input
-                  id="usuario"
-                  v-model="credenciales.usuario"
-                  type="text"
-                  :placeholder="t('auth.userPlaceholder')"
-                  class="login__input"
-                  @focus="campoEnfocado = 'usuario'"
-                  @blur="campoEnfocado = ''"
-                />
+          <div class="login__tarjeta">
+            <Transition name="fade" mode="out-in">
+              <LoginForm 
+                v-if="paso === 'login'" 
+                v-model="credenciales" 
+                :cargando="cargando" 
+                @submit="iniciarSesion" 
+              />
+              
+              <OtpForm 
+                v-else 
+                v-model="otp" 
+                :cargando="cargando" 
+                :puede-reenviar="puedeReenviar" 
+                :contador="contadorReenvio" 
+                @verificar="verificarOtp" 
+                @reenviar="reenviarCodigo" 
+                @volver="paso = 'login'" 
+              />
+            </Transition>
+
+            <Transition name="error-fade">
+              <p v-if="error" class="login__error">
+                <IconAlertCircle :size="16" />
+                {{ error }}
+              </p>
+            </Transition>
+            
+            <footer class="login__footer-mobile">
+              <p>&copy; {{ anioActual }} Innovix. {{ $t('auth.rights') }}</p>
+              <div class="login__footer-links">
+                <span>{{ $t('auth.support') }}</span>
+                <span class="login__footer-dot"></span>
+                <span>{{ $t('auth.privacy') }}</span>
               </div>
-            </div>
-
-            <!-- Password -->
-            <div class="login__campo">
-              <label class="login__label" for="contrasena">{{ t('auth.passLabel') }}</label>
-              <div class="login__input-wrapper" :class="{ 'login__input-wrapper--focus': campoEnfocado === 'contrasena' }">
-                <IconLock class="login__input-icon" :size="20" />
-                <input
-                  id="contrasena"
-                  v-model="credenciales.contrasena"
-                  :type="mostrarContrasena ? 'text' : 'password'"
-                  :placeholder="t('auth.passPlaceholder')"
-                  class="login__input"
-                  @focus="campoEnfocado = 'contrasena'"
-                  @blur="campoEnfocado = ''"
-                />
-                <button
-                  type="button"
-                  class="login__view-toggle"
-                  @click="mostrarContrasena = !mostrarContrasena"
-                >
-                  <component :is="mostrarContrasena ? IconEyeOff : IconEye" :size="18" />
-                </button>
-              </div>
-            </div>
-
-            <!-- Opciones Extra -->
-            <div class="login__opciones-fila">
-              <label class="login__checkbox-label">
-                <div class="login__checkbox-wrapper">
-                  <input type="checkbox" v-model="recordarme" class="login__checkbox-input" />
-                  <span class="login__checkbox-custom">
-                    <IconCheck v-if="recordarme" :size="14" stroke-width="3" />
-                  </span>
-                </div>
-                <span class="login__checkbox-text">{{ t('auth.rememberMe') }}</span>
-              </label>
-              <a href="#" class="login__link">{{ t('auth.forgotPass') }}</a>
-            </div>
-
-            <!-- Botón Login -->
-            <button
-              type="submit"
-              class="login__submit-btn"
-              :disabled="cargando"
-            >
-              <span v-if="!cargando">{{ t('auth.submit') }}</span>
-              <IconLoader2 v-else class="login__spinner" />
-            </button>
-          </form>
-
-          <Transition name="fade">
-            <div v-if="error" class="login__error">
-              <IconAlertCircle :size="18" />
-              <span>{{ error }}</span>
-            </div>
-          </Transition>
-        </div>
-      </div>
-
-      <!-- PANEL DERECHO: ILUSTRACIÓN (Balanceada e Inmersiva) -->
-      <div class="login__panel-arte">
-        <div class="login__arte-container">
-          <img :src="bannerUrl" alt="" class="login__arte-bg" />
-          <div class="login__arte-overlay"></div>
-
-          <div class="login__arte-contenido">
-            <p class="login__arte-overtitle">{{ t('auth.welcome') }}!</p>
-            <h2 class="login__arte-titulo">
-              {{ t('auth.bannerTitle') }}
-            </h2>
-            <div class="login__arte-divider"></div>
-            <p class="login__arte-desc">
-              {{ t('auth.bannerDesc') }}
-            </p>
-          </div>
-
-          <!-- Indicadores en una posición fija y elegante -->
-          <div class="login__indicadores">
-            <span class="login__dot login__dot--active"></span>
-            <span class="login__dot"></span>
-            <span class="login__dot"></span>
+            </footer>
           </div>
         </div>
       </div>
+
+      <AuthArtPanel :paso="paso" />
+      <AuthMobileDecor />
+      
+      <footer class="login__footer-desktop">
+        <p>&copy; {{ anioActual }} Innovix. {{ $t('auth.rights') }}</p>
+        <div class="login__footer-desktop-links">
+          <span>{{ $t('auth.support') }}</span>
+          <span class="login__footer-desktop-dot"></span>
+          <span>{{ $t('auth.privacy') }}</span>
+        </div>
+      </footer>
     </div>
   </div>
 </template>
@@ -120,28 +66,44 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { 
-  IconUser,
-  IconLock,
-  IconEye, 
-  IconEyeOff, 
-  IconAlertCircle,
-  IconLoader2,
-  IconCheck
-} from '@tabler/icons-vue';
-import logoUrl from '~/assets/logo.png';
-import bannerUrl from '~/assets/Banner_principal_V2.svg?url';
+import { IconAlertCircle } from '@tabler/icons-vue';
+
+// Componentes del módulo Auth
+import AuthHeader from '~/modules/auth/components/AuthHeader.vue';
+import LoginForm from '~/modules/auth/components/LoginForm.vue';
+import OtpForm from '~/modules/auth/components/OtpForm.vue';
+import AuthArtPanel from '~/modules/auth/components/AuthArtPanel.vue';
+import AuthMobileDecor from '~/modules/auth/components/AuthMobileDecor.vue';
 
 definePageMeta({ layout: 'auth' });
 
 const { t } = useI18n();
 const credenciales = ref({ usuario: '', contrasena: '' });
-const mostrarContrasena = ref(false);
-const recordarme = ref(false);
 const cargando = ref(false);
 const error = ref('');
-const campoEnfocado = ref('');
 const anioActual = computed(() => new Date().getFullYear());
+const localePath = useLocalePath();
+
+const paso = ref<'login' | 'otp'>('login');
+const otp = ref(['', '', '', '']);
+
+// Lógica de Reenvío de OTP
+const contadorReenvio = ref(0);
+const puedeReenviar = computed(() => contadorReenvio.value === 0);
+let intervaloReenvio: any = null;
+
+function iniciarContador() {
+  if (intervaloReenvio) clearInterval(intervaloReenvio);
+  contadorReenvio.value = 60;
+  intervaloReenvio = setInterval(() => {
+    if (contadorReenvio.value > 0) {
+      contadorReenvio.value--;
+    } else {
+      clearInterval(intervaloReenvio);
+      intervaloReenvio = null;
+    }
+  }, 1000);
+}
 
 async function iniciarSesion() {
   error.value = '';
@@ -151,10 +113,46 @@ async function iniciarSesion() {
   }
   cargando.value = true;
   try {
-    await new Promise(r => setTimeout(r, 1500));
-    await navigateTo('/');
+    await new Promise(r => setTimeout(r, 1000));
+    paso.value = 'otp';
+    iniciarContador();
   } catch (e) {
     error.value = t('auth.errorInvalid');
+  } finally {
+    cargando.value = false;
+  }
+}
+
+async function verificarOtp() {
+  error.value = '';
+  const codigo = otp.value.join('');
+  if (codigo.length < 4) {
+    error.value = 'Por favor ingresa el código completo';
+    return;
+  }
+  
+  cargando.value = true;
+  try {
+    await new Promise(r => setTimeout(r, 1500));
+    await navigateTo(localePath('/'));
+  } catch (e) {
+    error.value = 'Código OTP inválido';
+  } finally {
+    cargando.value = false;
+  }
+}
+
+async function reenviarCodigo() {
+  if (!puedeReenviar.value) return;
+  
+  error.value = '';
+  cargando.value = true;
+  try {
+    await new Promise(r => setTimeout(r, 1000));
+    iniciarContador();
+    otp.value = ['', '', '', ''];
+  } catch (e) {
+    error.value = 'Error al reenviar el código. Intenta nuevamente.';
   } finally {
     cargando.value = false;
   }
@@ -165,19 +163,36 @@ async function iniciarSesion() {
 .login {
   min-height: 100vh;
   display: flex;
-  background-color: #ffffff;
+  background-color: var(--iv-card-bg);
   font-family: 'Manrope', sans-serif;
   overflow: hidden;
-  transition: var(--iv-transition);
+  position: relative;
+  transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--iv-card-bg);
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.login.login--otp::before {
+  opacity: 1;
 }
 
 .login__contenedor {
   display: flex;
   width: 100%;
   height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
-/* ── Panel Formulario ── */
 .login__panel-formulario {
   flex: 0.8;
   display: flex;
@@ -186,6 +201,11 @@ async function iniciarSesion() {
   padding: 4rem;
   background: radial-gradient(circle at 10% 10%, rgba(0, 159, 227, 0.02) 0%, transparent 60%);
   animation: fadeInForm 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: flex 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login__panel-formulario--centrado {
+  flex: 1;
 }
 
 @keyframes fadeInForm {
@@ -197,345 +217,203 @@ async function iniciarSesion() {
   width: 100%;
   max-width: 400px;
   text-align: center;
-}
-
-.login__header {
-  margin-bottom: 3.5rem;
-}
-
-.login__logo-wrapper {
-  margin-bottom: 2.5rem;
-}
-
-.login__logo {
-  height: 48px;
-  width: auto;
-  object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(31%) sepia(97%) saturate(1751%) hue-rotate(180deg) brightness(96%) contrast(101%);
-}
-
-.dark-mode .login__logo {
-  filter: brightness(0) invert(1);
-}
-
-.login__titulo {
-  font-size: 2.75rem;
-  font-weight: 900;
-  letter-spacing: -2.5px;
-  margin-bottom: 0.5rem;
-  color: var(--iv-text-main);
-  line-height: 1.1;
-}
-
-.login__subtitulo {
-  color: var(--iv-text-secondary);
-  font-size: 1rem;
-  font-weight: 500;
-  opacity: 0.6;
-}
-
-/* ── Formulario ── */
-.login__form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  text-align: left;
-}
-
-.login__campo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.login__label {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: var(--iv-text-main);
-  margin-left: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.9;
-}
-
-.login__input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  height: 60px;
-  border: 1px solid #e2e8f0;
-  border-radius: 30px;
-  padding: 0 1.75rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: #f8fafc;
-}
-
-.login__input-wrapper--focus {
-  border-color: var(--iv-primary);
-  background-color: #ffffff;
-  box-shadow: 0 8px 20px -8px rgba(0, 159, 227, 0.12);
-  transform: translateY(-1px);
-}
-
-.login__input-icon {
-  color: #94a3b8;
-  transition: all 0.3s ease;
-}
-
-.login__input-wrapper--focus .login__input-icon {
-  color: var(--iv-primary);
-  transform: scale(1.1);
-}
-
-.login__input {
-  all: unset;
-  flex: 1;
-  font-size: 0.95rem;
-  color: var(--iv-text-main);
-  font-weight: 600;
-}
-
-.login__input::placeholder {
-  color: #94a3b8;
-  font-weight: 400;
-  opacity: 0.7;
-}
-
-.login__view-toggle {
-  background: none;
-  border: none;
-  color: #94a3b8;
-  cursor: pointer;
-  padding: 0.5rem;
-  display: flex;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-
-.login__view-toggle:hover {
-  color: var(--iv-primary);
-  background-color: var(--iv-item-hover);
-}
-
-.login__opciones-fila {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 0.5rem;
-}
-
-.login__checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--iv-text-secondary);
-  transition: color 0.2s;
-}
-
-.login__checkbox-label:hover {
-  color: var(--iv-text-main);
-}
-
-.login__checkbox-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
-.login__checkbox-input { 
-  display: none; 
-}
-
-.login__checkbox-custom {
-  width: 22px;
-  height: 22px;
-  border: 2px solid #cbd5e1;
-  border-radius: 7px;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.login__checkbox-input:checked + .login__checkbox-custom {
-  background-color: var(--iv-primary);
-  border-color: var(--iv-primary);
-  box-shadow: 0 4px 10px rgba(0, 159, 227, 0.2);
-}
-
-.login__link {
-  color: var(--iv-primary);
-  font-weight: 800;
-  font-size: 0.85rem;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-
-.login__link:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-}
-
-.login__submit-btn {
-  height: 60px;
-  background-color: var(--iv-primary);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  font-weight: 800;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 159, 227, 0.15);
-  margin-top: 1rem;
-}
-
-.login__submit-btn:hover:not(:disabled) {
-  background-color: #008cc9;
-}
-
-.login__submit-btn:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.login__submit-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.login__tarjeta {
+  position: relative;
 }
 
 .login__error {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.15rem;
-  background-color: #fff5f5;
-  border: 1px solid #feb2b2;
-  border-radius: 14px;
-  color: #c53030;
-  font-size: 0.85rem;
-  font-weight: 800;
-  margin-top: 1.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-/* ── Panel Ilustración ── */
-.login__panel-arte {
-  flex: 1.2;
-  display: flex;
-  padding: 1.5rem;
-}
-
-.login__arte-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 40px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  color: white;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-.login__arte-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: right center;
-  z-index: 1;
-}
-
-.login__arte-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to top right,
-    rgba(15, 23, 42, 0.85) 0%,
-    rgba(15, 23, 42, 0.4) 40%,
-    rgba(0, 159, 227, 0.2) 100%
-  );
-  z-index: 2;
-}
-
-.login__arte-contenido {
-  position: relative;
-  z-index: 3;
-  width: 100%;
-  max-width: 600px;
-  text-align: left;
-  margin-bottom: 8rem;
-  margin-left: 5rem;
-}
-
-.login__arte-overtitle {
-  font-size: 1.25rem;
+  gap: 0.5rem;
+  color: #ef4444;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 0.5rem;
-  opacity: 0.8;
+  justify-content: center;
+  position: absolute;
+  bottom: -3.5rem;
+  left: 0;
+  right: 0;
 }
 
-.login__arte-titulo {
-  font-size: 4rem;
-  font-weight: 950;
-  line-height: 1;
-  margin-bottom: 1.5rem;
-  letter-spacing: -3px;
-  text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+.login__footer-desktop {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  z-index: 10;
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.login__arte-divider {
-  width: 60px;
-  height: 6px;
-  background-color: var(--iv-primary);
-  margin-bottom: 1.5rem;
-  border-radius: 3px;
+.login.login--otp .login__footer-desktop {
+  width: 100%;
 }
 
-.login__arte-desc {
-  font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 450px;
-  line-height: 1.6;
+.login__footer-desktop-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   font-weight: 500;
 }
 
-.login__indicadores {
-  position: absolute;
-  bottom: 4rem;
-  right: 5rem;
-  display: flex;
-  gap: 0.75rem;
-  z-index: 3;
+.login__footer-desktop-dot {
+  width: 3px;
+  height: 3px;
+  background-color: #cbd5e1;
+  border-radius: 50%;
+  display: inline-block;
 }
 
-.login__dot {
-  width: 24px;
-  height: 6px;
-  background: rgba(255,255,255,0.3);
-  border-radius: 3px;
-  transition: all 0.3s;
+.login__footer-mobile {
+  display: none;
 }
 
-.login__dot--active {
-  background: white;
-  width: 48px;
+@media (max-width: 768px) {
+  .login {
+    background-color: var(--iv-card-bg);
+    position: relative;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .login__footer-desktop {
+    display: none;
+  }
+
+  .login__contenedor {
+    flex-direction: column;
+    height: 100%;
+    display: flex;
+    background: none;
+  }
+
+  .login__panel-formulario {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background: none;
+    animation: none;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .login__inner {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    width: 100%;
+    flex: 1 0 auto;
+    min-height: 100%;
+    box-sizing: border-box;
+    padding-top: 3rem;
+  }
+
+  .login__tarjeta {
+    background-color: var(--iv-card-bg);
+    border-radius: 0;
+    padding: 0.5rem 1.75rem 1.5rem;
+    margin-top: 0;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex: 1 0 auto;
+    box-sizing: border-box;
+  }
+
+  .login__footer-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--iv-text-muted, #64748b);
+    font-size: 0.75rem;
+    text-align: center;
+    margin-top: auto;
+    padding-top: 2rem;
+  }
+
+  .login__footer-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 700;
+  }
+
+  .login__footer-dot {
+    width: 4px;
+    height: 4px;
+    background-color: currentColor;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .login__error {
+    position: relative;
+    bottom: auto;
+    margin-top: 1rem;
+    margin-bottom: -1rem;
+    z-index: 2;
+  }
+
+  .login.login--otp :deep(.auth-decor__mobile) {
+    opacity: 0 !important;
+  }
+
+  .login__panel-formulario--centrado .login__tarjeta {
+    border-radius: 0;
+    flex: 1;
+    justify-content: center;
+    padding: 2rem 1.75rem;
+    margin-top: 0;
+    box-shadow: none;
+    min-height: auto;
+  }
 }
 
-@media (max-width: 1024px) {
-  .login__panel-arte { display: none; }
-  .login__panel-formulario { flex: 1; padding: 2rem; }
+/* Transiciones */
+.fade-enter-active {
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.error-fade-enter-active {
+  transition: opacity 0.3s ease;
+}
+
+.error-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.error-fade-enter-from,
+.error-fade-leave-to {
+  opacity: 0;
 }
 </style>

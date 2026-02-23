@@ -8,7 +8,8 @@
         "mapa": "Map",
         "administracion": "Admin",
         "configuracion": "Settings",
-        "activeSystem": "System Active"
+        "activeSystem": "System Active",
+        "colapsar": "Collapse"
     },
     "theme": {
         "switchToDark": "Switch to Dark Mode",
@@ -20,7 +21,8 @@
         "en": "English"
     },
     "common": {
-        "welcome": "Welcome"
+        "welcome": "Welcome",
+        "loading": "LOADING"
     },
     "auth": {
         "welcome": "Welcome",
@@ -41,6 +43,17 @@
         "google": "Sign up with Google",
         "facebook": "Sign up with Facebook",
         "noAccount": "Don't have an account?",
-        "signUp": "Sign up"
+        "signUp": "Sign up",
+        "rights": "All rights reserved.",
+        "support": "Support",
+        "privacy": "Privacy",
+        "otpTitle": "Verification Code",
+        "otpSubtitle": "Enter the OTP code to continue",
+        "otpMessage": "Please, enter the 4-digit OTP code sent to your device.",
+        "otpResendText": "Didn't receive the code?",
+        "otpResendAction": "Resend code",
+        "otpWait": "You can resend the code in",
+        "otpVerify": "Verify Code",
+        "otpBack": "Back to login"
     }
 }

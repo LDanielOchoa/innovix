@@ -1,13 +1,16 @@
 <template>
-  <NuxtLayout>
-    <NuxtRouteAnnouncer />
-    <NuxtPage />
-  </NuxtLayout>
+  <div id="app-root">
+    <CargadorGlobal />
+    <NuxtLayout>
+      <NuxtRouteAnnouncer />
+      <NuxtPage />
+    </NuxtLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
+import CargadorGlobal from '~/shared/components/ui/CargadorGlobal.vue';
 import { useThemeStore } from '~/core/theme/application/useTheme';
-import { useLocaleStore } from '~/core/i18n/application/useLocale';
 import { onMounted } from 'vue';
 
 useHead({
@@ -31,11 +34,9 @@ useHead({
 });
 
 const themeStore = useThemeStore();
-const localeStore = useLocaleStore();
 
 onMounted(() => {
   themeStore.initTheme();
-  localeStore.initLocale();
 });
 </script>
 
@@ -70,12 +71,27 @@ onMounted(() => {
   --iv-indicator-active: #10b981;
 }
 
+/* Transiciones de página */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px) scale(0.99);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-8px) scale(1.01);
+}
+
 .sin-transicion *,
 .sin-transicion *::before,
 .sin-transicion *::after {
   transition: none !important;
 }
-
 
 body {
   margin: 0;

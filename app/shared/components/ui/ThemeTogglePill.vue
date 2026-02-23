@@ -49,7 +49,6 @@ const themeStore = useThemeStore();
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* ── Pista (track) ── */
 .tema-toggle__pista {
   position: relative;
   width: 36px;
@@ -68,7 +67,6 @@ const themeStore = useThemeStore();
   border-color: rgba(0, 159, 227, 0.4);
 }
 
-/* ── Pulgar (thumb) ── */
 .tema-toggle__pulgar {
   position: absolute;
   left: 2px;
@@ -88,7 +86,6 @@ const themeStore = useThemeStore();
   background-color: var(--iv-primary);
 }
 
-/* ── Etiqueta ── */
 .tema-toggle__etiqueta {
   font-size: 0.78rem;
   font-weight: 600;
@@ -100,7 +97,6 @@ const themeStore = useThemeStore();
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Colapsado ── */
 .tema-toggle--colapsado {
   justify-content: center;
   padding: 0.45rem 0;

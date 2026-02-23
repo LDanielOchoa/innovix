@@ -8,7 +8,8 @@
         "mapa": "Mapa",
         "administracion": "Administración",
         "configuracion": "Ajustes",
-        "activeSystem": "Sistema Activo"
+        "activeSystem": "Sistema Activo",
+        "colapsar": "Colapsar"
     },
     "theme": {
         "switchToDark": "Cambiar a modo oscuro",
@@ -20,7 +21,8 @@
         "en": "Inglés"
     },
     "common": {
-        "welcome": "Bienvenido"
+        "welcome": "Bienvenido",
+        "loading": "CARGANDO"
     },
     "auth": {
         "welcome": "Bienvenido",
@@ -41,6 +43,17 @@
         "google": "Entrar con Google",
         "facebook": "Entrar con Facebook",
         "noAccount": "¿No tienes una cuenta?",
-        "signUp": "Regístrate"
+        "signUp": "Regístrate",
+        "rights": "Todos los derechos reservados.",
+        "support": "Soporte",
+        "privacy": "Privacidad",
+        "otpTitle": "Código de Verificación",
+        "otpSubtitle": "Ingresa el código OTP para continuar",
+        "otpMessage": "Por favor, ingresa el código OTP de 4 dígitos que ha sido enviado a tu dispositivo.",
+        "otpResendText": "¿No recibiste el código?",
+        "otpResendAction": "Reenviar código",
+        "otpWait": "Puedes reenviar el código en",
+        "otpVerify": "Verificar Código",
+        "otpBack": "Volver al inicio de sesión"
     }
 }

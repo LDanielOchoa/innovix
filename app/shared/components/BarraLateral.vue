@@ -1,18 +1,15 @@
 <template>
   <aside class="sidebar" :class="{ 'sidebar--colapsado': navStore.estaColapsado }">
 
-    <!-- Botón de colapso flotante -->
     <SidebarCollapseBtn
       :is-collapsed="navStore.estaColapsado"
       @toggle="navStore.alternarColapso"
     />
 
-    <!-- Logo / Marca -->
     <header class="sidebar__marca">
       <img :src="logoUrl" alt="Innovix" class="marca__logo" />
     </header>
 
-    <!-- Navegación -->
     <div class="sidebar__scroll">
       <nav class="sidebar__nav">
         <div
@@ -20,7 +17,6 @@
           :key="seccion.id"
           class="nav__grupo"
         >
-          <!-- Divisor de grupo en modo colapsado -->
           <div class="nav__divisor-grupo"></div>
           <span class="nav__titulo-grupo">{{ $t(`sidebar.${seccion.id}`) }}</span>
 
